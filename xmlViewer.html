@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>XML Viewer</title>
+        <script src="./lib/xml-reader.js"></script>
+    </head>
+    <body>
+        <input type="file" name="xml-file" id="xml-file-selector" />
+        <input type="button" name="load-file" value="Load File" id="load-file-button" />
+
+        <script>
+            var xmlDocument;
+
+            document.addEventListener("DOMContentLoaded", function (e) {
+                var fileSelector = document.getElementById("xml-file-selector");
+                var loadFileButton = document.getElementById("load-file-button");
+
+                loadFileButton.addEventListener("click", function (e) {
+                    var fileList = fileSelector.files;
+                    XmlReader.readXmlFile(fileList[0], function (e, xmlDoc) {
+                        xmlDocument = xmlDoc
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
