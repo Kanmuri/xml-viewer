@@ -1,3 +1,5 @@
+'use strict';
+
 class XmlReader {
     static readXmlFile(file, onLoad) {
         var file = file;
