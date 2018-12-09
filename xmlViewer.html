@@ -1,14 +1,21 @@
 <html>
     <head>
         <title>XML Viewer</title>
+        <script src="./lib/vue.js"></script>
         <script src="./src/xml-reader.js"></script>
+        <script src="./src/xml-viewer.js"></script>
     </head>
     <body>
         <input type="file" name="xml-file" id="xml-file-selector" />
         <input type="button" name="load-file" value="Load File" id="load-file-button" />
 
+        <div id="xml-viewer">
+            <node-display v-bind:node="rootNode" v-bind:l8n="l8n"></node-display>
+        </div>
+
         <script>
             var xmlDocument;
+            var xmlViewer = new XmlViewer('en-us');
 
             document.addEventListener("DOMContentLoaded", function (e) {
                 var fileSelector = document.getElementById("xml-file-selector");
@@ -17,7 +24,8 @@
                 loadFileButton.addEventListener("click", function (e) {
                     var fileList = fileSelector.files;
                     XmlReader.readXmlFile(fileList[0], function (e, xmlDoc) {
-                        xmlDocument = xmlDoc
+                        xmlDocument = xmlDoc;
+                        xmlViewer.renderXml(xmlDocument, '#xml-viewer');
                     });
                 });
             });
