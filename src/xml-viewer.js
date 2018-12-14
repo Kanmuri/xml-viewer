@@ -80,6 +80,9 @@ XmlViewerLocalization.strings = {
         },
         nodeTextContentLabel: {
             string: "Text content"
+        },
+        nodeChildrenLabel: {
+            string: "Children"
         }
     }
 };
@@ -107,7 +110,7 @@ class XmlViewer {
         var attribs = [];
         if(node.hasAttributes()) {
             var attrs = node.attributes;
-            for (var i = attrs.length - 1; i >= 0; i--) {
+            for (var i = 0; i < attrs.length; i++) {
                 var attrib = {
                     name: attrs[i].name,
                     value: attrs[i].value
@@ -133,6 +136,25 @@ class XmlViewer {
 
         return textContentNodes;
     }
+
+    childrenArray(node) {
+        var childNodes = [];
+        var i = 0;
+        var node;
+        var nodes = node.childNodes;
+
+        while(node = nodes[i++]) {
+            if(node.nodeType === Node.ELEMENT_NODE) {
+                childNodes.push(node);
+            }
+        }
+
+        return childNodes;
+    }
+
+    consoleLog(object) {
+        console.log(object);
+    }
 }
 
 XmlViewer.components = {};
@@ -143,7 +165,7 @@ XmlViewer.components.nodeDisplay = {
         <div class="node-name">
             <span class="node-name-label">{{l8n.interpolatel8nString("nodeNameLabel")}}</span> <span class="node-name-text">{{node.tagName}}</span>
         </div>
-        <div class="node-attributes">
+        <div class="node-attributes" v-if="node.hasAttributes()">
             <div class="node-attributes-label">{{l8n.interpolatel8nString("nodeAttributesLabel")}}</div>
             <ul class="node-attributes-list">
                 <li v-for="attr in xmlViewer.attributesArray(node)">
@@ -158,12 +180,18 @@ XmlViewer.components.nodeDisplay = {
                 </li>
             </ul>
         </div>
-        <div class="node-text-content-wrapper">
+        <div class="node-text-content-wrapper" v-if="xmlViewer.nodeTextContent(node).length > 0">
             <div class="node-text-content-label">{{l8n.interpolatel8nString("nodeTextContentLabel")}}</div>
             <div class="node-text-content">
                 <div class="node-text-content-segment" v-for="seg in xmlViewer.nodeTextContent(node)">
                     {{seg.nodeValue}}
                 </div>
+            </div>
+        </div>
+        <div class="node-children-wrapper" v-if="node.children !== undefined">
+            <div class="node-children-label">{{l8n.interpolatel8nString("nodeChildrenLabel")}}</div>
+            <div class="node-child-wrapper" v-for="childNode in xmlViewer.childrenArray(node)">
+                <node-display v-bind:node="childNode" v-bind:xml-viewer="xmlViewer" v-bind:l8n="l8n"></node-display>
             </div>
         </div>
     </div>
