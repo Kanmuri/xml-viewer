@@ -68,6 +68,15 @@ XmlViewerLocalization.strings = {
     default: {
         nodeNameLabel: {
             string: "Node Name:"
+        },
+        nodeAttributesLabel: {
+            string: "Attributes"
+        },
+        nodeAttributeNameLabel: {
+            string: "Name"
+        },
+        nodeAttributeValueLabel: {
+            string: "Value"
         }
     }
 };
@@ -82,6 +91,7 @@ class XmlViewer {
         var vueOptions = {
             el: rootSelector,
             data: {
+                xmlViewer: this,
                 rootNode: xmlDoc.documentElement,
                 l8n: this.l8n
             }
@@ -89,15 +99,46 @@ class XmlViewer {
 
         new Vue(vueOptions);
     }
+
+    attributesArray(node) {
+        var attribs = [];
+        if(node.hasAttributes()) {
+            var attrs = node.attributes;
+            for (var i = attrs.length - 1; i >= 0; i--) {
+                var attrib = {
+                    name: attrs[i].name,
+                    value: attrs[i].value
+                };
+                attribs.push(attrib);
+            }
+        }
+            
+        return attribs;
+    }
 }
 
 XmlViewer.components = {};
 XmlViewer.components.nodeDisplay = {
-    props: ['node', 'l8n'],
+    props: ['xmlViewer', 'node', 'l8n'],
     template: `
     <div class="node-display-wrapper">
         <div class="node-name">
             <span class="node-name-label">{{l8n.interpolatel8nString("nodeNameLabel")}}</span> <span class="node-name-text">{{node.tagName}}</span>
+        </div>
+        <div class="node-attributes">
+            <div class="node-attributes-label">{{l8n.interpolatel8nString("nodeAttributesLabel")}}</div>
+            <ul class="node-attributes-list">
+                <li v-for="attr in xmlViewer.attributesArray(node)">
+                    <div class="node-attribute-name-wrapper">
+                        <span class="node-attribute-name-label">{{l8n.interpolatel8nString("nodeAttributeNameLabel")}}</span>
+                        <span class="node-attribute-name">{{attr.name}}</span>
+                    </div>
+                    <div class="node-attribute-value-wrapper">
+                        <span class="node-attribute-value-label">{{l8n.interpolatel8nString("nodeAttributeValueLabel")}}</span>
+                        <span class="node-attribute-value">{{attr.value}}</span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
     `
