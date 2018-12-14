@@ -77,6 +77,9 @@ XmlViewerLocalization.strings = {
         },
         nodeAttributeValueLabel: {
             string: "Value"
+        },
+        nodeTextContentLabel: {
+            string: "Text content"
         }
     }
 };
@@ -115,6 +118,21 @@ class XmlViewer {
             
         return attribs;
     }
+
+    nodeTextContent(node) {
+        var textContentNodes = [];
+        var i = 0;
+        var node;
+        var nodes = node.childNodes;
+
+        while(node = nodes[i++]) {
+            if(node.nodeType === Node.TEXT_NODE) {
+                textContentNodes.push(node);
+            }
+        }
+
+        return textContentNodes;
+    }
 }
 
 XmlViewer.components = {};
@@ -139,6 +157,14 @@ XmlViewer.components.nodeDisplay = {
                     </div>
                 </li>
             </ul>
+        </div>
+        <div class="node-text-content-wrapper">
+            <div class="node-text-content-label">{{l8n.interpolatel8nString("nodeTextContentLabel")}}</div>
+            <div class="node-text-content">
+                <div class="node-text-content-segment" v-for="seg in xmlViewer.nodeTextContent(node)">
+                    {{seg.nodeValue}}
+                </div>
+            </div>
         </div>
     </div>
     `
