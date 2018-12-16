@@ -152,6 +152,23 @@ class XmlViewer {
         return childNodes;
     }
 
+    firstChildOfClass(node, className, excludedElement) {
+        var children = this.childrenArray(node);
+
+        for(const currentChild of children) {
+            if(currentChild !== excludedElement && currentChild.classList.contains(className)) {
+                return currentChild;
+            }
+        }
+
+        return undefined;
+    }
+
+    firstSiblingOfClass(node, className) {
+        var parent = node.parentElement;
+        return this.firstChildOfClass(parent, className, node);
+    }
+
     consoleLog(object) {
         console.log(object);
     }
@@ -192,37 +209,47 @@ XmlViewer.components.nodeDisplay = {
             return this.xmlViewer.childrenArray(this.node);
         }
     },
+    methods : {
+        toggleNodeDetails: function (e) {
+            var detailsWrapper = this.xmlViewer.firstSiblingOfClass(e.currentTarget, "node-details-wrapper");
+            detailsWrapper.classList.toggle("hidden");
+            e.currentTarget.classList.toggle("expanded");
+            e.currentTarget.classList.toggle("collapsed");
+        }
+    },
     template: `
     <div class="node-display-wrapper">
-        <div class="node-name">
+        <div class="node-name expanded" v-on:click="toggleNodeDetails">
             <span class="node-name-label label">{{nodeNameLabel}}</span> <span class="node-name-text">{{node.tagName}}</span>
         </div>
-        <div class="node-attributes" v-if="node.hasAttributes()">
-            <div class="node-attributes-label label">{{nodeAttributesLabel}}</div>
-            <ul class="node-attributes-list">
-                <li v-for="attr in attributesArray">
-                    <div class="node-attribute-name-wrapper">
-                        <span class="node-attribute-name-label label">{{nodeAttributeNameLabel}}</span>
-                        <span class="node-attribute-name">{{attr.name}}</span>
-                    </div>
-                    <div class="node-attribute-value-wrapper">
-                        <span class="node-attribute-value-label label">{{nodeAttributeValueLabel}}</span>
-                        <span class="node-attribute-value">{{attr.value}}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="node-text-content-wrapper" v-if="nodeTextContent.length > 0">
-            <div class="node-text-content-label label">{{nodeTextContentLabel}}</div>
-            <div class="node-text-content">
-                <div class="node-text-content-segment" v-for="seg in nodeTextContent">{{seg.nodeValue}}</div>
+        <div class="node-details-wrapper">
+            <div class="node-attributes-wrapper node-details" v-if="node.hasAttributes()">
+                <div class="node-attributes-label label">{{nodeAttributesLabel}}</div>
+                <ul class="node-attributes-list">
+                    <li v-for="attr in attributesArray">
+                        <div class="node-attribute-name-wrapper">
+                            <span class="node-attribute-name-label label">{{nodeAttributeNameLabel}}</span>
+                            <span class="node-attribute-name">{{attr.name}}</span>
+                        </div>
+                        <div class="node-attribute-value-wrapper">
+                            <span class="node-attribute-value-label label">{{nodeAttributeValueLabel}}</span>
+                            <span class="node-attribute-value">{{attr.value}}</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        </div>
-        <div class="node-children-wrapper" v-if="node.children !== undefined">
-            <div class="node-children-label label">{{nodeChildrenLabel}}</div>
-            <div class="node-children-list-wrapper">
-                <div class="node-child-wrapper" v-for="childNode in childrenArray">
-                    <node-display v-bind:node="childNode" v-bind:xml-viewer="xmlViewer" v-bind:l8n="l8n"></node-display>
+            <div class="node-text-content-wrapper node-details" v-if="nodeTextContent.length > 0">
+                <div class="node-text-content-label label">{{nodeTextContentLabel}}</div>
+                <div class="node-text-content">
+                    <div class="node-text-content-segment" v-for="seg in nodeTextContent">{{seg.nodeValue}}</div>
+                </div>
+            </div>
+            <div class="node-children-wrapper node-details" v-if="node.children !== undefined">
+                <div class="node-children-label label">{{nodeChildrenLabel}}</div>
+                <div class="node-children-list-wrapper">
+                    <div class="node-child-wrapper" v-for="childNode in childrenArray">
+                        <node-display v-bind:node="childNode" v-bind:xml-viewer="xmlViewer" v-bind:l8n="l8n"></node-display>
+                    </div>
                 </div>
             </div>
         </div>

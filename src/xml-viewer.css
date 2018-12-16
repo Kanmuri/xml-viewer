@@ -2,11 +2,23 @@
     font-weight: bold;
 }
 
-.node-display-wrapper .node-display-wrapper, .node-text-content {
+.node-display-wrapper .node-display-wrapper, .node-text-content, .node-details-wrapper {
     padding-left: 20px;
 }
 
 .node-text-content {
     white-space: pre-wrap;
     border: 1px dotted black;
+}
+
+.hidden {
+    display: none;
+}
+
+.expanded::before {
+    content: "- ";
+}
+
+.collapsed::before {
+    content: "+ ";
 }
