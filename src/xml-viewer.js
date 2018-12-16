@@ -195,33 +195,31 @@ XmlViewer.components.nodeDisplay = {
     template: `
     <div class="node-display-wrapper">
         <div class="node-name">
-            <span class="node-name-label">{{nodeNameLabel}}</span> <span class="node-name-text">{{node.tagName}}</span>
+            <span class="node-name-label label">{{nodeNameLabel}}</span> <span class="node-name-text">{{node.tagName}}</span>
         </div>
         <div class="node-attributes" v-if="node.hasAttributes()">
-            <div class="node-attributes-label">{{nodeAttributesLabel}}</div>
+            <div class="node-attributes-label label">{{nodeAttributesLabel}}</div>
             <ul class="node-attributes-list">
                 <li v-for="attr in attributesArray">
                     <div class="node-attribute-name-wrapper">
-                        <span class="node-attribute-name-label">{{nodeAttributeNameLabel}}</span>
+                        <span class="node-attribute-name-label label">{{nodeAttributeNameLabel}}</span>
                         <span class="node-attribute-name">{{attr.name}}</span>
                     </div>
                     <div class="node-attribute-value-wrapper">
-                        <span class="node-attribute-value-label">{{nodeAttributeValueLabel}}</span>
+                        <span class="node-attribute-value-label label">{{nodeAttributeValueLabel}}</span>
                         <span class="node-attribute-value">{{attr.value}}</span>
                     </div>
                 </li>
             </ul>
         </div>
         <div class="node-text-content-wrapper" v-if="nodeTextContent.length > 0">
-            <div class="node-text-content-label">{{nodeTextContentLabel}}</div>
+            <div class="node-text-content-label label">{{nodeTextContentLabel}}</div>
             <div class="node-text-content">
-                <div class="node-text-content-segment" v-for="seg in nodeTextContent">
-                    {{seg.nodeValue}}
-                </div>
+                <div class="node-text-content-segment" v-for="seg in nodeTextContent">{{seg.nodeValue}}</div>
             </div>
         </div>
         <div class="node-children-wrapper" v-if="node.children !== undefined">
-            <div class="node-children-label">{{nodeChildrenLabel}}</div>
+            <div class="node-children-label label">{{nodeChildrenLabel}}</div>
             <div class="node-children-list-wrapper">
                 <div class="node-child-wrapper" v-for="childNode in childrenArray">
                     <node-display v-bind:node="childNode" v-bind:xml-viewer="xmlViewer" v-bind:l8n="l8n"></node-display>

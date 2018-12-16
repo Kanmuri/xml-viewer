@@ -1,0 +1,12 @@
+.label {
+    font-weight: bold;
+}
+
+.node-display-wrapper .node-display-wrapper, .node-text-content {
+    padding-left: 20px;
+}
+
+.node-text-content {
+    white-space: pre-wrap;
+    border: 1px dotted black;
+}
