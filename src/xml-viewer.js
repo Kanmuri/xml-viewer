@@ -210,11 +210,23 @@ XmlViewer.components.nodeDisplay = {
         }
     },
     methods : {
+        toggleSection: function (labelNode, collapsableNode) {
+            collapsableNode.classList.toggle("hidden");
+            labelNode.classList.toggle("expanded");
+            labelNode.classList.toggle("collapsed");
+        },
+        toggleSibling: function (node, siblingClass) {
+            var sibling = this.xmlViewer.firstSiblingOfClass(node, siblingClass);
+            this.toggleSection(node, sibling);
+        },
         toggleNodeDetails: function (e) {
-            var detailsWrapper = this.xmlViewer.firstSiblingOfClass(e.currentTarget, "node-details-wrapper");
-            detailsWrapper.classList.toggle("hidden");
-            e.currentTarget.classList.toggle("expanded");
-            e.currentTarget.classList.toggle("collapsed");
+            this.toggleSibling(e.currentTarget, "node-details-wrapper");
+        },
+        toggleNodeAttributes: function (e) {
+            this.toggleSibling(e.currentTarget, "node-attributes-list");
+        },
+        toggleNodeChildren: function (e) {
+            this.toggleSibling(e.currentTarget, "node-children-list-wrapper");
         }
     },
     template: `
@@ -224,7 +236,7 @@ XmlViewer.components.nodeDisplay = {
         </div>
         <div class="node-details-wrapper">
             <div class="node-attributes-wrapper node-details" v-if="node.hasAttributes()">
-                <div class="node-attributes-label label">{{nodeAttributesLabel}}</div>
+                <div class="node-attributes-label label expanded" v-on:click="toggleNodeAttributes">{{nodeAttributesLabel}}</div>
                 <ul class="node-attributes-list">
                     <li v-for="attr in attributesArray">
                         <div class="node-attribute-name-wrapper">
@@ -245,7 +257,7 @@ XmlViewer.components.nodeDisplay = {
                 </div>
             </div>
             <div class="node-children-wrapper node-details" v-if="node.children !== undefined">
-                <div class="node-children-label label">{{nodeChildrenLabel}}</div>
+                <div class="node-children-label label expanded" v-on:click="toggleNodeChildren">{{nodeChildrenLabel}}</div>
                 <div class="node-children-list-wrapper">
                     <div class="node-child-wrapper" v-for="childNode in childrenArray">
                         <node-display v-bind:node="childNode" v-bind:xml-viewer="xmlViewer" v-bind:l8n="l8n"></node-display>
